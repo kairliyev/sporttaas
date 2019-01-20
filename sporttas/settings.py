@@ -20,15 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = '69i_ctih5!d0+mve1@qi!_^0bk$et#v02kw@=1+!z+#5%6)qbg'
+SECRET_KEY = '69i_ctih5!d0+mve1@qi!_^0bk$et#v02kw@=1+!z+#5%6)qbg'
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
-DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL')
-    )
-}
+#
+# DATABASES = {
+#     'default': 'postgres://dhxqqpilvwxzjy:e4c49768d35c57399b8efb4d4ebf04217dc643f15f30db2091102a06e35e3e80@ec2-54-225-227-125.compute-1.amazonaws.com:5432/d58eaac18ej8h1'
+# }
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -90,11 +87,11 @@ WSGI_APPLICATION = 'sporttas.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'quizui',
-        'USER': 'ali',
-        'PASSWORD': '123',
-        'HOST': 'localhost',
-        'PORT': '',
+        'NAME': 'd58eaac18ej8h1',
+        'USER': 'dhxqqpilvwxzjy',
+        'PASSWORD': 'e4c49768d35c57399b8efb4d4ebf04217dc643f15f30db2091102a06e35e3e80',
+        'HOST': 'ec2-54-225-227-125.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
