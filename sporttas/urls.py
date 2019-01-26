@@ -20,6 +20,8 @@ from rest_framework import authentication, urls
 
 api_urls = [
     path('events/', include('events.urls')),
+    path('smallevents/', include('groupings.urls')),
+    # path('s_events/', include('s_events.urls')),
     path('', include('users.urls')),
 ]
 
