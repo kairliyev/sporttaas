@@ -9,8 +9,9 @@ from events.serializers import EventSerializer
 class EventCreateAPIView(ListCreateAPIView):
     serializer_class = EventSerializer
 
+
     def get_queryset(self):
-        return Events.objects.filter(user=self.request.user)
+        return Events.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
