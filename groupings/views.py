@@ -25,13 +25,22 @@ from rest_framework.permissions import IsAuthenticated
 @permission_classes((AllowAny, IsAuthenticated))
 def create(request):
     print(request.data)
-    grouping_serilializer = GroupingSerializer(data={"title": request.data["title"], "admin": request.user.pk})
+    grouping_serilializer = GroupingSerializer(data={"title": request.data["title"],
+                                                     "description": request.data["description"],
+                                                     "address": request.data["address"],
+                                                     "price": request.data["price"],
+                                                     "date": request.data["date"],
+                                                     "time": request.data["time"],
+                                                     "min_people": request.data["min_people"],
+                                                     "type" : request.data["type"],
+                                                     "city": request.data["city"],
+                                                     "admin": request.user.pk})
     if grouping_serilializer.is_valid():
         print("ok")
         g = grouping_serilializer.save()
-        return Response({
-            'smallevents': grouping_serilializer.data
-        }, status=HTTP_200_OK)
+        return Response(
+            grouping_serilializer.data
+        , status=HTTP_200_OK)
     else:
         return Response(grouping_serilializer.errors, status=HTTP_400_BAD_REQUEST)
 
@@ -76,7 +85,7 @@ class EventsSub(generics.RetrieveUpdateAPIView):
         Membership.objects.update_or_create(user=user, grouping=grouping_serilializer)
         return Grouping.objects.filter(members=self.request.user)
 
-
+#Duristap jiberu kerek
 class EventsUnSub(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Grouping.objects.all()
