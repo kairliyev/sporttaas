@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate
 from rest_framework.decorators import api_view, permission_classes
@@ -66,17 +67,19 @@ class GroupingListCreate(generics.ListCreateAPIView):
     def get_queryset(self):
         print("2")
         user = self.request.user
-        #return Grouping.objects.filter(members=self.request.user)
-        return Grouping.objects.all()
+        # return Grouping.objects.all()
+        return Grouping.objects.exclude(members=self.request.user)
 
     # def list(self,request):
     #     groupings = request.user.grouping_set
     #     groupings_serializer = GroupingSerializer(groupings, many = True)
     #     return Response(groupings_serializer.data)
 
+
 class GroupingListSavedCreate(generics.ListCreateAPIView):
-    serializer_class =  GroupingGetSerializer
+    serializer_class = GroupingGetSerializer
     permission_classes = (IsMemberOnly, IsAuthenticated)
+
     def get_queryset(self):
         user = self.request.user
         return Grouping.objects.filter(members=self.request.user)
@@ -87,7 +90,27 @@ class GroupingRetrieveDestroy(generics.RetrieveDestroyAPIView):
     queryset = Grouping.objects.all()
     serializer_class = GroupingGetSerializer
 
+
 class EventsSub(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsMemberOnly, IsAuthenticated]
+    queryset = Grouping.objects.all()
+    serializer_class = GroupingSubSerializer
+
+
+    def get(self, request, *args, **kwargs):
+        print(request.data)
+        user = User.objects.get(pk=request.user.pk)
+        # grouping_serilializer = Grouping.objects.filter(title=self.kwargs['id'])
+        grouping_serilializer = Grouping.objects.get(id=self.kwargs['pk'])
+        # g_s = GroupingGetSerializer(data={"title": request.data["title"], "admin": request.user.pk})
+        # if g_s.is_valid():
+        Membership.objects.update_or_create(user=user, grouping=grouping_serilializer)
+        return Response({'YES'}, status=HTTP_200_OK)
+        # else:
+        #     return Response({'NO'}, status=HTTP_400_BAD_REQUEST)
+
+
+class EventsUnSub(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsMemberOnly, IsAuthenticated]
     queryset = Grouping.objects.all()
     serializer_class = GroupingSubSerializer
@@ -96,14 +119,10 @@ class EventsSub(generics.RetrieveUpdateAPIView):
         user = User.objects.get(pk=request.user.pk)
         # grouping_serilializer = Grouping.objects.filter(title=self.kwargs['id'])
         grouping_serilializer = Grouping.objects.get(id=self.kwargs['pk'])
-        Membership.objects.update_or_create(user=user, grouping=grouping_serilializer)
+        Membership.objects.get(user=user, grouping=grouping_serilializer).delete()
         return Response({'OK'}, status=HTTP_200_OK)
-
 
     # def get(self, request, id, **kwargs):
     #     user = User.objects.get(,
     #     grouping_serilializer = Grouping.objects.filter(id=id)
     #     Membership.objects.create(user=user, grouping=grouping_serilializer)
-
-
-
