@@ -62,7 +62,7 @@ class GroupingListSavedCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Grouping.objects.filter(members=self.request.user).latest('id')
+        return Grouping.objects.filter(members=self.request.user)
 
 
 class GroupingRetrieveDestroy(generics.RetrieveDestroyAPIView):
