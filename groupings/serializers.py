@@ -63,8 +63,7 @@ class GroupingSerializer(serializers.ModelSerializer):
             'members': {'required': False},
         }
 
-        def validate_title(self, value):
-            all_title = Grouping.objects.filter(title=value)
+
 
         # validators = [
         #     UniqueTogetherValidator(
