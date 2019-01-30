@@ -1,10 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 from django.utils.encoding import smart_text as smart_unicode
 from django.core.exceptions import ValidationError
 
 
 # Create your models here.
+class Coordinate(models.Model):
+    latitude = models.CharField(max_length=50, default='43.248949')
+    longitude = models.CharField(max_length=50, default='76.899709')
+
+
 class Grouping(models.Model):
     class Meta:
         app_label = 'groupings'
@@ -21,6 +27,7 @@ class Grouping(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name="admin")
+    coordinates = models.OneToOneField(Coordinate, on_delete=models.CASCADE, default=None)
     members = models.ManyToManyField(User, through='Membership', related_name="members")
 
     def __str__(self):
@@ -36,3 +43,11 @@ class Membership(models.Model):
     grouping = models.ForeignKey(Grouping, on_delete=models.CASCADE)
     added_at = models.DateTimeField(auto_now_add=True)
     role = models.CharField(choices=ROLE_CHOICE, default='2', max_length=1)
+
+
+
+
+
+
+
+

@@ -22,7 +22,7 @@ from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(["POST"])
-@permission_classes((AllowAny, IsAuthenticated))
+@permission_classes((IsAuthenticated))
 def create(request):
     print(request.data)
     grouping_serilializer = GroupingSerializer(data={"title": request.data["title"],
@@ -33,6 +33,7 @@ def create(request):
                                                      "time": request.data["time"],
                                                      "min_people": request.data["min_people"],
                                                      "type" : request.data["type"],
+                                                     "coordinates" : request.data["coordinates"],
                                                      "city": request.data["city"],
                                                      "admin": request.user.pk})
     if grouping_serilializer.is_valid():
