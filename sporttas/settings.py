@@ -92,14 +92,14 @@ WSGI_APPLICATION = 'sporttas.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-#
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd58eaac18ej8h1',
-        'USER': 'dhxqqpilvwxzjy',
-        'PASSWORD': 'e4c49768d35c57399b8efb4d4ebf04217dc643f15f30db2091102a06e35e3e80',
-        'HOST': 'ec2-54-225-227-125.compute-1.amazonaws.com',
+        'NAME': 'd9c0enmetc25hb',
+        'USER': 'ekxnawmxtpjpcd',
+        'PASSWORD': '8f9c67f9a111ee02352ea3895d53367e0d613b70131883a31666b48941afa5f8',
+        'HOST': 'ec2-54-83-17-151.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -107,7 +107,7 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'quizui',
+#         'NAME': 'quizui4',
 #         'USER': 'ali',
 #         'PASSWORD': '123',
 #         'HOST': 'localhost',
