@@ -10,10 +10,16 @@ class Coordinate(models.Model):
     latitude = models.CharField(max_length=50, default='43.248949')
     longitude = models.CharField(max_length=50, default='76.899709')
 
+    def __str__(self):
+        return self.latitude + " " + self.longitude
+
 
 class Grouping(models.Model):
+
     class Meta:
         app_label = 'groupings'
+        verbose_name = 'Спортивное событие'
+        verbose_name_plural = 'Спортивные события'
 
     title = models.CharField(max_length=100)
     type = models.CharField(max_length=50)
@@ -21,8 +27,8 @@ class Grouping(models.Model):
     city = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
     price = models.IntegerField()
-    date = models.CharField( max_length=100)
-    time = models.CharField( max_length=100)
+    date = models.CharField(max_length=100)
+    time = models.CharField(max_length=100)
     min_people = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -44,10 +50,5 @@ class Membership(models.Model):
     added_at = models.DateTimeField(auto_now_add=True)
     role = models.CharField(choices=ROLE_CHOICE, default='2', max_length=1)
 
-
-
-
-
-
-
-
+    def __str__(self):
+        return str(self.user)

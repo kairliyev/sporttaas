@@ -50,6 +50,7 @@ class GroupingSerializer(serializers.ModelSerializer):
         Membership.objects.create(grouping=grouping, user=grouping.admin)
         return grouping
 
+
 class GroupingSubSerializer(serializers.ModelSerializer):
     members = MemberListingField(many=True, read_only=True)
 
@@ -74,4 +75,18 @@ class GroupingGetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Grouping
-        fields = ('id', 'title', 'type', 'city', 'address', 'date', 'time', 'city', 'min_people', 'price', 'description', 'created_at', 'updated_at', 'coordinates', 'admin', 'members',)
+        fields = (
+            'id', 'title', 'type', 'city', 'address', 'date', 'time', 'city', 'min_people', 'price', 'description',
+            'created_at', 'updated_at', 'coordinates', 'admin', 'members',)
+
+
+class SmallEventCreatingSerializer(serializers.ModelSerializer):
+    coordinates = CoordinateField()
+    step = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Grouping
+        fields = (
+            "address", "city", "coordinates", "date", "description", "min_people", "price", "step", "time", "title",
+            "type")
+

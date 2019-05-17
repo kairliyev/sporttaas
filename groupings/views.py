@@ -9,11 +9,14 @@ from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
 )
+from rest_framework import status as sts
+
 from rest_framework.response import Response
 
-from .serializers import GroupingSerializer, MemeberSerializer, GroupingGetSerializer, GroupingSubSerializer
+from .serializers import GroupingSerializer, MemeberSerializer, GroupingGetSerializer, GroupingSubSerializer, \
+    SmallEventCreatingSerializer
 
-from .models import Grouping, Membership
+from .models import Grouping, Membership, Coordinate
 from django.contrib.auth.models import User
 
 from groupings.permission import IsMemberOnly, IsOwnerOnly
@@ -22,28 +25,35 @@ from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(["POST"])
-@permission_classes((IsAuthenticated))
+@permission_classes((IsAuthenticated,))
 def create(request):
-    print(request.data)
-    grouping_serilializer = GroupingSerializer(data={"title": request.data["title"],
-                                                     "description": request.data["description"],
-                                                     "address": request.data["address"],
-                                                     "price": request.data["price"],
-                                                     "date": request.data["date"],
-                                                     "time": request.data["time"],
-                                                     "min_people": request.data["min_people"],
-                                                     "type" : request.data["type"],
-                                                     "coordinates" : request.data["coordinates"],
-                                                     "city": request.data["city"],
-                                                     "admin": request.user.pk})
-    if grouping_serilializer.is_valid():
-        print("ok")
-        g = grouping_serilializer.save()
+    global sevent
+    sevent_serilizer = SmallEventCreatingSerializer(data=request.data)
+    if sevent_serilizer.is_valid():
+        coor = Coordinate.objects.create(latitude=request.data["coordinates"]["latitude"],
+                                         longitude=request.data["coordinates"]["longitude"])
+        sevent = \
+            Grouping.objects.create(coordinates=coor,
+                                    title=sevent_serilizer.validated_data["title"],
+                                    address=sevent_serilizer.validated_data["address"],
+                                    city=sevent_serilizer.validated_data["city"],
+                                    date=sevent_serilizer.validated_data["date"],
+                                    description=sevent_serilizer.validated_data["description"],
+                                    min_people=sevent_serilizer.validated_data["min_people"],
+                                    price=sevent_serilizer.validated_data["price"],
+                                    time=sevent_serilizer.validated_data["time"],
+                                    type=sevent_serilizer.validated_data["type"],
+                                    admin_id=request.user.id
+                                    )
         return Response(
-            grouping_serilializer.data
-        , status=HTTP_200_OK)
+            data=SmallEventCreatingSerializer(sevent).data,
+            status=HTTP_200_OK
+        )
     else:
-        return Response(grouping_serilializer.errors, status=HTTP_400_BAD_REQUEST)
+        return Response(
+            data=sevent_serilizer.errors,
+            status=HTTP_400_BAD_REQUEST
+        )
 
 
 class GroupingListCreate(generics.ListCreateAPIView):
@@ -86,7 +96,8 @@ class EventsSub(generics.RetrieveUpdateAPIView):
         Membership.objects.update_or_create(user=user, grouping=grouping_serilializer)
         return Grouping.objects.filter(members=self.request.user)
 
-#Duristap jiberu kerek
+
+# Duristap jiberu kerek
 class EventsUnSub(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Grouping.objects.all()
@@ -101,5 +112,3 @@ class EventsUnSub(generics.RetrieveUpdateDestroyAPIView):
         print(Grouping.objects.get(id=self.kwargs['pk']))
         mem.delete()
         return Grouping.objects.filter(title=grouping_serilializer)
-
-
